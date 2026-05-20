@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 
 // Wait for PostgreSQL database to be ready
-const { Client } = require('pg');
+import pg from 'pg';
+const { Client } = pg;
 
 const connectionString = process.env.DATABASE_URL;
 
