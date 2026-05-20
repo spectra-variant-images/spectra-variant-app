@@ -59,7 +59,6 @@ model SpectraProduct {
   updatedAt      DateTime @updatedAt
 
   @@unique([shopId, shopifyProductId])
-  @@unique([shopId, shopifyProductId])
   @@index([shopId])
 }
 
