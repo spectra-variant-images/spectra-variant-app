@@ -1,0 +1,26 @@
+# Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
+
+client_id = "2e4575da88ccd972711896dd2f76e5ec"
+application_url = "https://dining-pacific-conversations-creating.trycloudflare.com"
+embedded = true
+name = "spectra-variant-images"
+
+[access_scopes]
+scopes = "write_products,write_product_listings,read_product_listings,read_inventory"
+
+[webhooks]
+api_version = "2026-07"
+
+  [[webhooks.subscriptions]]
+  uri = "/webhooks/app/uninstalled"
+  topics = [ "app/uninstalled" ]
+
+  [[webhooks.subscriptions]]
+  uri = "/webhooks/app/scopes_update"
+  topics = [ "app/scopes_update" ]
+
+[auth]
+redirect_urls = [ "https://dining-pacific-conversations-creating.trycloudflare.com/api/auth" ]
+
+[build]
+automatically_update_urls_on_dev = true

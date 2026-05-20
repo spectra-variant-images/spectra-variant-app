@@ -1,0 +1,171 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Shopify session storage (default from template)
+model Session {
+  id                  String    @id
+  shop                String
+  state               String
+  isOnline            Boolean   @default(false)
+  scope               String?
+  expires             DateTime?
+  accessToken         String
+  userId              BigInt?
+  firstName           String?
+  lastName           String?
+  email               String?
+  accountOwner        Boolean   @default(false)
+  locale              String?
+  collaborator        Boolean?  @default(false)
+  emailVerified       Boolean?  @default(false)
+  refreshToken        String?
+  refreshTokenExpires DateTime?
+}
+
+// ============================================
+// SPECTRA APP MODELS
+// ============================================
+
+// Product being configured in Spectra
+model SpectraProduct {
+  id             String   @id @default(cuid())
+  shopId         String
+  shopifyProductId BigInt
+  shopifyGid     String   @unique
+  configuredAt   DateTime?
+  lastSyncedAt   DateTime @default(now())
+
+  // Configuration
+  primaryOption  String?  // e.g., "Color" - which option drives gallery
+  swatchShape    String   @default("circle") // circle, square, rounded
+  swatchSize     String   @default("medium") // small, medium, large
+
+  // AI processing
+  aiJobId        String?
+
+  relations      SpectraAssignment[]
+  aiJobs         SpectraAiJob[]
+
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@unique([shopId, shopifyProductId])
+  @@unique([shopId, shopifyProductId])
+  @@index([shopId])
+}
+
+// Variant to media assignment
+model SpectraAssignment {
+  id           String   @id @default(cuid())
+  productId    String
+  shopifyVariantGid String
+  shopifyVariantId BigInt
+
+  // Array of media GIDs assigned to this variant (JSON string)
+  mediaIds     String   // JSON array: ["gid://shopify/MediaImage/123", ...]
+
+  // Ordering
+  position     Int      @default(0)
+
+  // Metadata
+  isConfigured Boolean  @default(false) // true if 2+ images assigned
+  imageCount   Int      @default(0)
+
+  product      SpectraProduct @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([productId])
+  @@index([shopifyVariantId])
+  @@unique([shopifyVariantGid])
+}
+
+// AI auto-assign job
+model SpectraAiJob {
+  id           String   @id @default(cuid())
+  shopId       String
+  status       String   @default("queued") // queued, processing, completed, failed, cancelled
+  progress     Int      @default(0)
+  total        Int      @default(0)
+
+  // Job configuration
+  productIds   String   // JSON array of product GIDs to process
+  options      String?  // JSON: job options (language, confidence threshold, etc.)
+
+  // Results
+  results      String?  // JSON: suggested mappings
+  errors       String?  // JSON: any errors encountered
+
+  // Timing
+  startedAt    DateTime?
+  completedAt  DateTime?
+  failedAt     DateTime?
+
+  products     SpectraProduct[]
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([shopId])
+  @@index([status])
+}
+
+// Store settings and limits
+model SpectraStoreSettings {
+  id               String   @id @default(cuid())
+  shopId           String   @unique
+
+  // Plan and limits
+  plan             String   @default("free") // free, starter, growth, scale
+  maxProducts      Int      @default(1)
+  productCount     Int      @default(0)
+
+  // AI quota
+  aiQuotaAllocated Int      @default(100) // images per month
+  aiQuotaUsed      Int      @default(0)
+  aiQuotaResetAt   DateTime // quota reset date
+
+  // Feature flags
+  featureCollectionSwatches Boolean @default(false)
+  featureBundles         Boolean @default(false)
+
+  // Onboarding state
+  onboardingCompleted Boolean @default(false)
+  onboardingStep     Int     @default(0)
+
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@index([shopId])
+}
+
+// Store's learned color/variant names (improves AI accuracy)
+model SpectraColorDictionary {
+  id        String   @id @default(cuid())
+  shopId    String
+
+  // The color/variant name
+  name      String   // e.g., "navy", "bordeaux", "coral"
+  language  String   @default("en") // ISO code
+
+  // Learned mappings
+  hexCodes  String?  // JSON array of hex codes associated with this name
+  aliases   String?  // JSON array of alternative names
+  frequency Int      @default(1) // how often this appears in store
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([shopId, name, language])
+  @@index([shopId])
+}

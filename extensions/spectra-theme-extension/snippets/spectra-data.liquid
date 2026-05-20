@@ -1,0 +1,24 @@
+{%- comment -%}
+  Spectra - Product Metafield Data Injection
+{%- endcomment -%}
+
+{%- assign variant_media = product.metafields.spectra.variant_media.value -%}
+{%- assign global_media = product.metafields.spectra.global_media.value -%}
+{%- assign swatch_color = product.metafields.spectra.swatch_color_hex.value -%}
+{%- assign swatch_image = product.metafields.spectra.swatch_image_gid.value -%}
+{%- assign primary_option = product.metafields.spectra.primary_option.value -%}
+{%- assign swatch_shape = product.metafields.spectra.swatch_shape.value -%}
+{%- assign swatch_size = product.metafields.spectra.swatch_size.value -%}
+
+<script type="application/json" data-spectra-data>
+  {
+    "namespace": "spectra",
+    "variant_media": {{ variant_media | json }},
+    "global_media": {{ global_media | json }},
+    "swatch_color_hex": {{ swatch_color | json }},
+    "swatch_image_gid": {{ swatch_image | json }},
+    "primary_option": {{ primary_option | json }},
+    "swatch_shape": {{ swatch_shape | json }},
+    "swatch_size": {{ swatch_size | json }}
+  }
+</script>

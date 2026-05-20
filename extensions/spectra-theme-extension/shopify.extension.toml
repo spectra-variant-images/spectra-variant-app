@@ -1,0 +1,6 @@
+name = "Spectra Variant Images & Swatches"
+type = "theme"
+uid = "c5a327d7-ff08-3f28-8e28-fafbcae0ff64237edb3d"
+
+# No JS module targeting for theme extensions
+# JS is loaded via liquid snippets

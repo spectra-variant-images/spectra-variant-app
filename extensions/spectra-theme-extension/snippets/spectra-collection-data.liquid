@@ -1,0 +1,27 @@
+{%- comment -%}
+  Spectra - Collection Page Swatches Data
+  Injects variant swatch data for product cards on collection pages
+{%- endcomment -%}
+
+{%- if product != blank -%}
+  {%- capture swatch_data -%}
+    [
+      {%- for variant in product.variants -%}
+        {%- if variant.available -%}
+          {
+            "value": {{ variant.option1 | json }},
+            "variantId": {{ variant.id | json }},
+            "available": {{ variant.available | json }},
+            "image": {{ variant.featured_image | image_url: '400x' | json }},
+            "inventoryQuantity": {{ variant.inventory_quantity | default: 0 | json }},
+            "color": {{ product.metafields.spectra.swatch_color_hex.value | default: '' | json }}
+          }{%- unless forloop.last -%},{%- endunless -%}
+        {%- endif -%}
+      {%- endfor -%}
+    ]
+  {%- endcapture -%}
+
+  <script type="application/json" data-spectra-product-swatches>
+    {{- swatch_data -}}
+  </script>
+{%- endif -%}

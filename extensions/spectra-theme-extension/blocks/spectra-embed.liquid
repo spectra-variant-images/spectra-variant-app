@@ -1,0 +1,157 @@
+{%- comment -%}
+  Spectra App Embed
+  Enable this in theme editor to activate variant images and swatches
+{%- endcomment -%}
+
+{%- if request.page_type == 'product' -%}
+  {%- if settings.enable_product_gallery -%}
+    <!-- Spectra Product Gallery -->
+    <script src="{{ 'product-gallery.js' | asset_url }}" defer></script>
+    {% render 'spectra-data' %}
+  {%- endif -%}
+
+  {%- if settings.enable_swatches -%}
+    <!-- Spectra Variant Swatches -->
+    <script src="{{ 'variant-swatches.js' | asset_url }}" defer></script>
+  {%- endif -%}
+{%- endif -%}
+
+{%- if request.page_type == 'collection' or request.page_type == 'search' -%}
+  {%- if settings.enable_collection_swatches -%}
+    <!-- Spectra Collection Swatches -->
+    <script src="{{ 'collection-swatches.js' | asset_url }}" defer></script>
+  {%- endif -%}
+{%- endif -%}
+
+{%- comment -%}
+  Collection page inline data injection
+  This snippet should be included in product-card templates
+{%- endcomment -%}
+<script type="application/json" data-spectra-collection-config>
+  {
+    "shape": {{ settings.swatch_shape | default: 'circle' | json }},
+    "size": {{ settings.swatch_size | default: 'small' | json }},
+    "hoverUpdate": {{ settings.collection_hover_update | default: true | json }},
+    "showQuantity": {{ settings.collection_show_quantity | default: false | json }}
+  }
+</script>
+
+{%- schema -%}
+{
+  "name": "Spectra App Embed",
+  "target": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Product Page Features"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_product_gallery",
+      "label": "Enable Product Gallery Filtering",
+      "info": "Show only images for selected variant",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_swatches",
+      "label": "Enable Variant Swatches",
+      "info": "Replace dropdowns with visual swatches",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Collection Page Features"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_collection_swatches",
+      "label": "Enable Collection Swatches",
+      "info": "Show variant swatches on collection pages",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "collection_hover_update",
+      "label": "Update Image on Hover",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "collection_show_quantity",
+      "label": "Show Available Quantity",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Swatch Appearance"
+    },
+    {
+      "type": "select",
+      "id": "swatch_shape",
+      "label": "Swatch Shape",
+      "options": [
+        { "value": "circle", "label": "Circle" },
+        { "value": "square", "label": "Square" },
+        { "value": "rounded", "label": "Rounded" }
+      ],
+      "default": "circle"
+    },
+    {
+      "type": "select",
+      "id": "swatch_size",
+      "label": "Swatch Size",
+      "options": [
+        { "value": "small", "label": "Small" },
+        { "value": "medium", "label": "Medium" },
+        { "value": "large", "label": "Large" }
+      ],
+      "default": "medium"
+    },
+    {
+      "type": "range",
+      "id": "swatch_size_custom",
+      "label": "Custom Swatch Size (px)",
+      "min": 20,
+      "max": 60,
+      "default": 32
+    },
+    {
+      "type": "header",
+      "content": "Stock Display"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_out_of_stock",
+      "label": "Show Out of Stock Variants",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "out_of_stock_style",
+      "label": "Out of Stock Style",
+      "options": [
+        { "value": "cross_out", "label": "Cross out" },
+        { "value": "hide", "label": "Hide completely" },
+        { "value": "show_label", "label": "Show 'Sold Out' label" }
+      ],
+      "default": "cross_out"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_low_stock_badge",
+      "label": "Show Low Stock Badge",
+      "info": "Display badge when stock is low",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "low_stock_threshold",
+      "label": "Low Stock Threshold",
+      "min": 1,
+      "max": 50,
+      "default": 5
+    }
+  ]
+}
+{%- endschema -%}
