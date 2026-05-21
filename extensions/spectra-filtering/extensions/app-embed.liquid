@@ -1,0 +1,93 @@
+{% comment %}
+  Spectra - App Embed
+  Automatically injects variant filtering and swatches
+{% endcomment %}
+
+{% if settings.enable_filtering or settings.enable_swatches %}
+  <style>
+    /* Spectra Swatches Styles */
+    .spectra-swatches {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 12px 0;
+    }
+
+    .spectra-swatch {
+      border: 2px solid #e1e3e5;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+
+    .spectra-swatch:hover {
+      transform: scale(1.1);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+
+    .spectra-swatch--round {
+      border-radius: 50%;
+    }
+
+    .spectra-swatch--square {
+      border-radius: 4px;
+    }
+
+    .spectra-swatch--pill {
+      border-radius: 16px;
+      padding: 0 12px;
+      min-width: 48px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .spectra-swatch[aria-selected="true"] {
+      border-color: #000;
+      box-shadow: 0 0 0 2px rgba(0,0,0,0.1);
+    }
+
+    .spectra-swatch[disabled] {
+      opacity: 0.4;
+      cursor: not-allowed;
+      text-decoration: line-through;
+    }
+  </style>
+
+  <script>
+    // Spectra configuration
+    window.SpectraConfig = {
+      enableFiltering: {{ settings.enable_filtering }},
+      enableSwatches: {{ settings.enable_swatches }},
+      swatchStyle: '{{ settings.swatch_style | default: "round" }}',
+      swatchSize: {{ settings.swatch_size | default: 32 }},
+    };
+  </script>
+
+  {% if product %}
+    <!-- Inject variant media mapping data -->
+    <script id="SpectraVariantMediaMap" type="application/json">
+      {
+        {% for variant in product.variants %}
+          "{{ variant.id }}": [
+            {% if variant.metafields.spectra.variant_media %}
+              {{ variant.metafields.spectra.variant_media }}
+            {% else %}
+              []
+            {% endif %}
+          ]{% unless forloop.last %},{% endunless %}
+        {% endfor %}
+      }
+    </script>
+
+    <script id="SpectraGlobalMedia" type="application/json">
+      {% if product.metafields.spectra.global_media %}
+        {{ product.metafields.spectra.global_media }}
+      {% else %}
+        []
+      {% endif %}
+    </script>
+  {% endif %}
+
+  <!-- Load Spectra JavaScript -->
+  <script src="{{ 'spectra-filter.js' | asset_url }}" defer></script>
+{% endif %}

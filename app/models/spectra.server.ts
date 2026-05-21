@@ -110,7 +110,9 @@ export async function upsertVariantAssignment(
   productId: string,
   shopifyVariantGid: string,
   shopifyVariantId: bigint,
-  mediaIds: string[]
+  mediaIds: string[],
+  swatchColor?: string,
+  swatchImage?: string
 ) {
   const assignment = await prisma.spectraAssignment.upsert({
     where: { shopifyVariantGid },
@@ -121,11 +123,15 @@ export async function upsertVariantAssignment(
       mediaIds: JSON.stringify(mediaIds),
       imageCount: mediaIds.length,
       isConfigured: mediaIds.length >= 2,
+      swatchColor,
+      swatchImage,
     },
     update: {
       mediaIds: JSON.stringify(mediaIds),
       imageCount: mediaIds.length,
       isConfigured: mediaIds.length >= 2,
+      swatchColor,
+      swatchImage,
       updatedAt: new Date(),
     },
   });
@@ -142,6 +148,8 @@ export async function bulkUpsertAssignments(
     shopifyVariantGid: string;
     shopifyVariantId: bigint;
     mediaIds: string[];
+    swatchColor?: string;
+    swatchImage?: string;
   }>
 ) {
   return prisma.$transaction(
@@ -155,11 +163,15 @@ export async function bulkUpsertAssignments(
           mediaIds: JSON.stringify(a.mediaIds),
           imageCount: a.mediaIds.length,
           isConfigured: a.mediaIds.length >= 2,
+          swatchColor: a.swatchColor,
+          swatchImage: a.swatchImage,
         },
         update: {
           mediaIds: JSON.stringify(a.mediaIds),
           imageCount: a.mediaIds.length,
           isConfigured: a.mediaIds.length >= 2,
+          swatchColor: a.swatchColor,
+          swatchImage: a.swatchImage,
         },
       })
     )

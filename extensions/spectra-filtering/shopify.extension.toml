@@ -1,0 +1,50 @@
+# Spectra Storefront Filtering Extension
+name = "Spectra Variant Filtering"
+type = "theme_app_extension"
+
+# App Embed for automatic injection
+[[extensions.targeting]]
+module = "extensions/app-embed.liquid"
+target = "purchase.checkout.block.render"
+
+# App Block for manual placement
+[[extensions.targeting]]
+module = "extensions/product-block.liquid"
+target = "runtime"
+
+# Settings
+[extensions.settings]
+  [[extensions.settings.fields]]
+  key = "enable_filtering"
+  type = "boolean"
+  name = "Enable Image Filtering"
+  description = "Show only relevant images when variant is selected"
+  default = true
+
+  [[extensions.settings.fields]]
+  key = "enable_swatches"
+  type = "boolean"
+  name = "Enable Color Swatches"
+  description = "Replace dropdowns with visual swatches"
+  default = true
+
+  [[extensions.settings.fields]]
+  key = "swatch_style"
+  type = "select"
+  name = "Swatch Style"
+  description = "Visual appearance of swatches"
+  options = [
+    { value = "round", label = "Round" },
+    { value = "square", label = "Square" },
+    { value = "pill", label = "Pill" }
+  ]
+  default = "round"
+
+  [[extensions.settings.fields]]
+  key = "swatch_size"
+  type = "number_integer"
+  name = "Swatch Size (px)"
+  description = "Size of each swatch in pixels"
+  default = 32
+  min = 20
+  max = 60

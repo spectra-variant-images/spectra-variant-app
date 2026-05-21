@@ -49,6 +49,9 @@ model SpectraProduct {
   swatchShape    String   @default("circle") // circle, square, rounded
   swatchSize     String   @default("medium") // small, medium, large
 
+  // Global media (shown for all variants)
+  globalMedia    String?  // JSON array of media GIDs
+
   // AI processing
   aiJobId        String?
 
@@ -71,6 +74,10 @@ model SpectraAssignment {
 
   // Array of media GIDs assigned to this variant (JSON string)
   mediaIds     String   // JSON array: ["gid://shopify/MediaImage/123", ...]
+
+  // Swatch configuration
+  swatchColor  String?  // Hex color for swatch
+  swatchImage  String?  // Image URL for swatch
 
   // Ordering
   position     Int      @default(0)
@@ -133,6 +140,17 @@ model SpectraStoreSettings {
   aiQuotaAllocated Int      @default(100) // images per month
   aiQuotaUsed      Int      @default(0)
   aiQuotaResetAt   DateTime // quota reset date
+
+  // Swatch settings
+  enableProductSwatches   Boolean  @default(true)
+  enableCollectionSwatches Boolean @default(true)
+  swatchStyle             String   @default("round") // round, square, pill
+  swatchSize              Int      @default(32)
+  limitCollectionSwatches Int      @default(5)
+  hoverToChange           Boolean  @default(true)
+
+  // Low stock threshold
+  lowStockThreshold       Int      @default(5)
 
   // Feature flags
   featureCollectionSwatches Boolean @default(false)
