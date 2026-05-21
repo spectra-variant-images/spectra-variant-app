@@ -130,9 +130,15 @@ export default function ProductsPage() {
     <Badge>{product.imagesCount} images</Badge>,
     <Button
       variant="plain"
+      onClick={() => navigate(`/app/swatches?productId=${product.gid}`)}
+    >
+      Swatches
+    </Button>,
+    <Button
+      variant="plain"
       onClick={() => navigate(`/app/products/${product.id}`)}
     >
-      Configure
+      Images
     </Button>,
   ]);
 
