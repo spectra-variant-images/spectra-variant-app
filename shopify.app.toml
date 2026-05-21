@@ -20,7 +20,7 @@ api_version = "2026-07"
   topics = [ "app/scopes_update" ]
 
 [auth]
-redirect_urls = [ "https://spectra-app-fb05.onrender.com/api/auth", "https://spectra-app-fb05.onrender.com/auth/tokens" ]
+redirect_urls = [ "https://spectra-app-fb05.onrender.com/auth" ]
 
 [build]
 automatically_update_urls_on_dev = true
