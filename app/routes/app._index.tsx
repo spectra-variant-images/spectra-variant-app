@@ -128,7 +128,7 @@ export default function Index() {
                 <Button url="/app/products" primary>
                   Configure Products
                 </Button>
-                <Button url="/app/ai" icon={MagicMajor}>
+                <Button url="/app/ai" icon={MagicIcon}>
                   AI Auto-Assign
                 </Button>
                 <Button url="/app/settings">
