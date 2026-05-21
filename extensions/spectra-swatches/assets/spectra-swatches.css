@@ -1,0 +1,86 @@
+/* Spectra Swatches - Storefront Styles */
+
+.spectra-swatches-container {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 12px 0;
+}
+
+.spectra-swatch {
+  border: 2px solid #e1e3e5;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.spectra-swatch:hover {
+  transform: scale(1.1);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.spectra-swatch--round {
+  border-radius: 50%;
+}
+
+.spectra-swatch--square {
+  border-radius: 4px;
+}
+
+.spectra-swatch--pill {
+  border-radius: 16px;
+  padding: 0 12px;
+  min-width: 48px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* Selected state */
+.spectra-swatch[aria-selected="true"],
+.spectra-swatch.spectra-swatch--selected {
+  border-color: #000;
+  box-shadow: 0 0 0 2px rgba(0,0,0,0.1);
+}
+
+/* Disabled/out of stock state */
+.spectra-swatch[disabled],
+.spectra-swatch.spectra-swatch--disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  text-decoration: line-through;
+}
+
+/* Collection page swatches */
+.spectra-collection-swatches {
+  display: flex;
+  gap: 4px;
+  margin-top: 8px;
+}
+
+.spectra-collection-swatches .spectra-swatch {
+  width: 18px;
+  height: 18px;
+  border-width: 1px;
+}
+
+/* Tooltip */
+.spectra-swatch::after {
+  content: attr(aria-label);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 4px 8px;
+  background: #000;
+  color: #fff;
+  font-size: 12px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+  margin-bottom: 4px;
+}
+
+.spectra-swatch:hover::after {
+  opacity: 1;
+}

@@ -1,0 +1,59 @@
+# Spectra Variant Swatches - Theme Extension
+name = "Spectra Swatches"
+type = "theme_app_extension"
+
+# App Embed - injects swatch JavaScript and CSS
+[[extensions.targeting]]
+module = "extensions/app-embed.js"
+target = "purchase.checkout.block.render"
+
+# App Block - for product page swatches
+[[extensions.targeting]]
+module = "extensions/product-swatches.liquid"
+target = "runtime"
+
+# Settings schema
+[extensions.settings]
+  [[extensions.settings.fields]]
+  key = "enable_product_page"
+  type = "boolean"
+  name = "Enable on Product Page"
+  description = "Show color swatches on product pages"
+  default = true
+
+  [[extensions.settings.fields]]
+  key = "enable_collection_page"
+  type = "boolean"
+  name = "Enable on Collection Page"
+  description = "Show color swatches on collection pages"
+  default = true
+
+  [[extensions.settings.fields]]
+  key = "swatch_style"
+  type = "select"
+  name = "Swatch Style"
+  description = "Visual style of color swatches"
+  options = [
+    { value = "round", label = "Round" },
+    { value = "square", label = "Square" },
+    { value = "pill", label = "Pill" }
+  ]
+  default = "round"
+
+  [[extensions.settings.fields]]
+  key = "swatch_size"
+  type = "number_integer"
+  name = "Swatch Size (px)"
+  description = "Size of each swatch"
+  default = 32
+  min = 20
+  max = 60
+
+  [[extensions.settings.fields]]
+  key = "limit_collection_swatches"
+  type = "number_integer"
+  name = "Max Swatches on Collection"
+  description = "Maximum number of swatches to show on collection pages"
+  default = 5
+  min = 3
+  max = 10
