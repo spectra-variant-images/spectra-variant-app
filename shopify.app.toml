@@ -1,6 +1,6 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
-client_id = "2e4575da88ccd972711896dd2f76e5ec"
+client_id = "5c5046ac0f9dc60de3876e1db2498012"
 application_url = "https://spectra-app-fb05.onrender.com"
 embedded = true
 name = "spectra-variant-images"
