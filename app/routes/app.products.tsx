@@ -31,17 +31,58 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   const search = url.searchParams.get("search") || "";
 
   try {
-    // Fetch products from Shopify
-    const response = await admin.rest.get({
-      path: "products",
-      query: {
-        limit,
-        page_info: url.searchParams.get("page_info") || undefined,
-      },
-    });
-    const shopifyProducts = await response.json();
+    // Fetch products from Shopify using GraphQL
+    const response = await admin.graphql(
+      `#graphql
+      query ($first: Int!) {
+        products(first: $first) {
+          edges {
+            node {
+              id
+              title
+              handle
+              status
+              featuredImage {
+                url
+              }
+              totalInventory
+              variants(first: 1) {
+                totalCount
+              }
+              images(first: 1) {
+                totalCount
+              }
+              updatedAt
+            }
+          }
+        }
+      }
+      `,
+      {
+        variables: {
+          first: limit,
+        },
+      }
+    );
 
-    const products = shopifyProducts.body?.products?.map((p: any) => ({
+    const data = await response.json();
+
+    const products = data.data?.products?.edges?.map((edge: any) => {
+      const p = edge.node;
+      // Extract numeric ID from gid://shopify/Product/123456789
+      const idMatch = p.id.match(/Product\/(\d+)/);
+      return {
+        id: idMatch ? idMatch[1] : p.id,
+        gid: p.id,
+        title: p.title,
+        handle: p.handle,
+        status: p.status,
+        variantsCount: p.variants?.totalCount || 0,
+        imagesCount: p.images?.totalCount || 0,
+        featuredImage: p.featuredImage?.url,
+        updatedAt: p.updatedAt,
+      };
+    }) || [];
       id: p.id,
       gid: `gid://shopify/Product/${p.id}`,
       title: p.title,
@@ -56,7 +97,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     return json({
       products,
       page,
-      hasNext: shopifyProducts.body?.page_info?.hasNextPage,
+      hasNext: data.data?.products?.edges?.length === limit,
     });
   } catch (error) {
     console.error("Error fetching products:", error);
