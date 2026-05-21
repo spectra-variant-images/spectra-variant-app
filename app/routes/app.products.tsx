@@ -18,6 +18,7 @@ import {
   TextField,
   Pagination,
   Frame,
+  Icon,
 } from "@shopify/polaris";
 import { SearchIcon, PlusIcon } from "@shopify/polaris-icons";
 
