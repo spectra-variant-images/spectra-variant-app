@@ -128,11 +128,11 @@ export default function Index() {
                 <Button url="/app/products" primary>
                   Configure Products
                 </Button>
-                <Button url="/app/ai" icon={MagicIcon}>
-                  AI Auto-Assign
+                <Button url="/app/swatches" icon={MagicIcon}>
+                  Color Swatches
                 </Button>
-                <Button url="/app/settings">
-                  Settings
+                <Button url="/app/ai">
+                  AI Auto-Assign
                 </Button>
               </LegacyStack>
             </BlockStack>
